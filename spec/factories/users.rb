@@ -10,7 +10,7 @@ FactoryBot.define do
     first_name_kana          {person.first.katakana}
     last_name_kana           {person.last.katakana}
     email                    {Faker::Internet.free_email}
-    password                 {Faker::Internet.password(min_length: 6)}
+    password                 {"1a#{Faker::Internet.password(min_length: 6, mix_case: false)}"}
     password_confirmation    {password}
     user_birth_date          {Faker::Date.in_date_period}
   end
