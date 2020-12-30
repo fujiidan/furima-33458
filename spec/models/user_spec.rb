@@ -58,7 +58,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'パスワードは、英字のみでは保存できないこと' do
-      @user.password = "abcdef"
+      @user.password = 'abcdef'
       @user.password_confirmation = @user.password
       @user.valid?
       expect(@user.errors.full_messages).to include('Password Include both letters and numbers')
