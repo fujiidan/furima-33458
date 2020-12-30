@@ -71,12 +71,6 @@ RSpec.describe User, type: :model do
       expect(@user.errors.full_messages).to include('Password Include both letters and numbers')
     end
 
-    it 'パスワードは、確認用を含めて2回入力すること' do
-      @user.password_confirmation = nil
-      @user.valid?
-      expect(@user.errors.full_messages).to include("Password confirmation can't be blank")
-    end
-
     it 'パスワードとパスワード（確認用）、値の一致が必須であること' do
       @user.password_confirmation = ''
       @user.valid?
