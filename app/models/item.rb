@@ -12,7 +12,7 @@ class Item < ApplicationRecord
     validates :price, numericality: {only_integer: true, message: "Half-width number" }
   end
 
-  with options numericality: { other_than: 1 } do
+  with options numericality: { other_than: 0 } do
     validates :category_id
     validates :sales_status_id
     validates :shipping_fee_id
@@ -24,4 +24,3 @@ class Item < ApplicationRecord
     greater_than_or_equal_to: 300, less_than_or_equal_to: 9999999, message: "Out of setting range"}
 
 end
-      
