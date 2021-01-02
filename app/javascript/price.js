@@ -2,7 +2,7 @@ function price() {
   const priceForm = document.getElementById("item-price");
   priceForm.addEventListener("keyup", () => {
     const priceDate = document.getElementById("item-price");
-    const price = parseInt(priceDate.value, 10);
+    const price = parseInt(priceDate.value, 10) || 0;
     const taxDate = document.getElementById("add-tax-price");
     const profitDate = document.getElementById("profit");
 
