@@ -1,6 +1,6 @@
 function price() {
   const priceForm = document.getElementById("item-price");
-  priceForm.addEventListener("keyup", () => {
+  priceForm.addEventListener("input", () => {
     const priceDate = document.getElementById("item-price");
     const price = parseInt(priceDate.value, 10) || 0;
     const taxDate = document.getElementById("add-tax-price");
