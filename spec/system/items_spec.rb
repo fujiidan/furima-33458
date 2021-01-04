@@ -58,6 +58,7 @@ RSpec.describe 'Items', type: :system do
       expect(page).to have_content(@item.name)
       expect(page).to have_content(@item.price)
       expect(page).to have_content(@item.shipping_fee_status.name)
+      expect(page).to have_content(@item.text)
       expect(page).to have_content(@item.user.nickname)
       expect(page).to have_content(@item.category.name)
       expect(page).to have_content(@item.sales_status.name)
