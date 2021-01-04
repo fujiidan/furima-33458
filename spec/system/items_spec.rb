@@ -35,4 +35,15 @@ RSpec.describe 'Items', type: :system do
       expect(page).to have_content(@item.name)
     end
   end
+
+  describe '商品一覧表示機能' do
+    it '商品を出品するとトップページに推移し、商品の画像、名前、価格、配送手数料の情報が表示されていること' do
+      sign_in(@item.user)
+      create_item(@item)
+      expect(page).to have_selector("img[src$='test_image.png']")
+      expect(page).to have_content(@item.name)
+      expect(page).to have_content(@item.price)
+      expect(page).to have_content(@item.shipping_fee_status.name)
+    end
+  end
 end
