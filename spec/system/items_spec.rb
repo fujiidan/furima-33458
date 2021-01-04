@@ -46,4 +46,46 @@ RSpec.describe 'Items', type: :system do
       expect(page).to have_content(@item.shipping_fee_status.name)
     end
   end
+
+  describe '商品詳細ページ' do
+    before do
+      @item.save
+      @user = FactoryBot.create(:user)
+    end
+
+    it '商品出品時に登録した情報が見られるようになっていること' do
+      visit item_path(@item)
+      expect(page).to have_content(@item.name)
+      expect(page).to have_content(@item.price)
+      expect(page).to have_content(@item.shipping_fee_status.name)
+      expect(page).to have_content(@item.user.nickname)
+      expect(page).to have_content(@item.category.name)
+      expect(page).to have_content(@item.sales_status.name)
+      expect(page).to have_content(@item.prefecture.name)
+      expect(page).to have_content(@item.scheduled_delivery.name)
+    end
+
+    it 'ログイン状態の出品者のみ、「編集・削除ボタン」が表示されること' do
+      log_in(@item.user)
+      visit item_path(@item)
+      expect(page).to have_content('編集')
+      expect(page).to have_content('削除')
+    end
+
+    it 'ログイン状態の出品者でも、売却済みの商品に対しては「編集・削除ボタン」が表示されないこと' do
+    end
+
+    it 'ログイン状態の出品者以外のユーザーのみ、「購入画面に進むボタン」が表示されること' do
+      log_in(@user)
+      visit item_path(@item)
+      expect(page).to have_content('購入画面に進む')
+    end
+
+    it 'ログアウト状態のユーザーには、「編集・削除・購入画面に進むボタン」が表示されないこと' do
+      visit item_path(@item)
+      expect(page).to have_no_content('編集')
+      expect(page).to have_no_content('削除')
+      expect(page).to have_no_content('購入画面に進む')
+    end
+  end
 end
