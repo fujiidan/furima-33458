@@ -130,17 +130,17 @@ RSpec.describe 'Items', type: :system do
     end
   end
 
-    describe '商品削除機能' do
-      before do 
-        @item.save
-      end
+  describe '商品削除機能' do
+    before do
+      @item.save
+    end
 
-      it '出品者だけが商品情報を削除できること' do
-        log_in(@item.user)
-        visit item_path(@item)
-        expect{click_on("削除")}.to change{Item.count}.by(-1)
-        expect(current_path).to eq root_path
-        expect(page).to have_no_content(@item.name)
-      end  
-    end  
+    it '出品者だけが商品情報を削除できること' do
+      log_in(@item.user)
+      visit item_path(@item)
+      expect { click_on('削除') }.to change { Item.count }.by(-1)
+      expect(current_path).to eq root_path
+      expect(page).to have_no_content(@item.name)
+    end
+  end
 end
