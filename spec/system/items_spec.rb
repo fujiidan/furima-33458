@@ -142,5 +142,6 @@ RSpec.describe 'Items', type: :system do
       expect(current_path).to eq root_path
       expect(page).to have_no_content(@item.name)
     end
+
   end
 end
