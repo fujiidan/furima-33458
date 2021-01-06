@@ -5,7 +5,7 @@ RSpec.describe OrderAddress, type: :model do
     before do
       @order_address = FactoryBot.build(:order_address)
     end
-    context '商品の購入ができる場合' do  
+    context '商品の購入ができる場合' do
       it '必要な情報を適切に入力すると、商品の購入ができること' do
         expect(@order_address).to be_valid
       end
@@ -14,10 +14,9 @@ RSpec.describe OrderAddress, type: :model do
         @order_address.building = nil
         expect(@order_address).to be_valid
       end
+    end
 
-    end  
-
-    context '商品の購入ができない場合' do    
+    context '商品の購入ができない場合' do
       it 'user_idが必須であること' do
         @order_address.user_id = nil
         @order_address.valid?
@@ -89,6 +88,6 @@ RSpec.describe OrderAddress, type: :model do
         @order_address.valid?
         expect(@order_address.errors.full_messages).to include('Phone number input only number')
       end
-    end  
+    end
   end
 end
