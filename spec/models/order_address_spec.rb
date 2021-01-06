@@ -10,6 +10,23 @@ RSpec.describe OrderAddress, type: :model do
       expect(@order_address).to be_valid
     end
 
+    it '建物名が空でも登録できること' do
+      @order_address.building = nil
+      expect(@order_address).to be_valid
+    end  
+
+    it 'user_idが必須であること' do
+      @order_address.user_id = nil
+      @order_address.valid?
+      expect(@order_address.errors.full_messages).to include("User can't be blank")
+    end
+
+    it 'user_idが必須であること' do
+      @order_address.item_id = nil
+      @order_address.valid?
+      expect(@order_address.errors.full_messages).to include("Item can't be blank")
+    end  
+
     it 'クレジットカードのトークンが必須であること' do
       @order_address.token = nil
       @order_address.valid?
