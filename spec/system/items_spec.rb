@@ -48,14 +48,14 @@ RSpec.describe 'Items', type: :system do
       expect(page).to have_content(@item.name)
       expect(page).to have_content(@item.price)
       expect(page).to have_content(@item.shipping_fee_status.name)
-      expect(page).to have_no_content("Sold Out!!")
+      expect(page).to have_no_content('Sold Out!!')
     end
 
     it '売却済みの商品はSold Out!!の表示があること' do
       @order.save
       visit root_path
-      expect(page).to have_content("Sold Out!!")
-    end  
+      expect(page).to have_content('Sold Out!!')
+    end
   end
 
   describe '商品詳細ページ' do
@@ -76,14 +76,14 @@ RSpec.describe 'Items', type: :system do
       expect(page).to have_content(@item.sales_status.name)
       expect(page).to have_content(@item.prefecture.name)
       expect(page).to have_content(@item.scheduled_delivery.name)
-      expect(page).to have_no_content("Sold Out!!")
+      expect(page).to have_no_content('Sold Out!!')
     end
 
     it '売却済みの商品にはSold Out!!の表記があること' do
       @order.save
       visit item_path(@order.item)
-      expect(page).to have_content("Sold Out!!")
-    end  
+      expect(page).to have_content('Sold Out!!')
+    end
 
     it 'ログイン状態の出品者のみ、「編集・削除ボタン」が表示されること' do
       log_in(@item.user)
