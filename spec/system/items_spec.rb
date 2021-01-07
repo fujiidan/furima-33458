@@ -37,13 +37,24 @@ RSpec.describe 'Items', type: :system do
   end
 
   describe '商品一覧表示機能' do
-    it '商品を出品するとトップページに推移し、商品の画像、名前、価格、配送手数料の情報が表示されていること' do
+    before do
+      @order = FactoryBot.build(:order)
+    end
+
+    it '商品を出品するとトップページに推移し、商品の画像、名前、価格、配送手数料の情報が表示され,Sold 0ut!の表記が無いこと' do
       sign_in(@item.user)
       create_item(@item)
       expect(page).to have_selector("img[src$='test_image.png']")
       expect(page).to have_content(@item.name)
       expect(page).to have_content(@item.price)
       expect(page).to have_content(@item.shipping_fee_status.name)
+      expect(page).to have_no_content('Sold Out!!')
+    end
+
+    it '売却済みの商品はSold Out!!の表示があること' do
+      @order.save
+      visit root_path
+      expect(page).to have_content('Sold Out!!')
     end
   end
 
@@ -51,9 +62,10 @@ RSpec.describe 'Items', type: :system do
     before do
       @item.save
       @user = FactoryBot.create(:user)
+      @order = FactoryBot.build(:order)
     end
 
-    it '商品出品時に登録した情報が見られるようになっていること' do
+    it '商品出品時に登録した情報が見られるようになっており、売却されていない商品にはSold Out!!の表記がないこと' do
       visit item_path(@item)
       expect(page).to have_content(@item.name)
       expect(page).to have_content(@item.price)
@@ -64,6 +76,13 @@ RSpec.describe 'Items', type: :system do
       expect(page).to have_content(@item.sales_status.name)
       expect(page).to have_content(@item.prefecture.name)
       expect(page).to have_content(@item.scheduled_delivery.name)
+      expect(page).to have_no_content('Sold Out!!')
+    end
+
+    it '売却済みの商品にはSold Out!!の表記があること' do
+      @order.save
+      visit item_path(@order.item)
+      expect(page).to have_content('Sold Out!!')
     end
 
     it 'ログイン状態の出品者のみ、「編集・削除ボタン」が表示されること' do
@@ -73,13 +92,28 @@ RSpec.describe 'Items', type: :system do
       expect(page).to have_content('削除')
     end
 
-    it 'ログイン状態の出品者でも、売却済みの商品に対しては「編集・削除ボタン」が表示されないこと' do
+    it 'ログイン状態の出品者でも、売却済みの商品に対しては「編集・削除ボタン・購入画面に進むボタン」が表示されないこと' do
+      @order.save
+      log_in(@order.user)
+      visit item_path(@order.item)
+      expect(page).to have_no_content('編集')
+      expect(page).to have_no_content('削除')
+      expect(page).to have_no_content('購入画面に進む')
     end
 
     it 'ログイン状態の出品者以外のユーザーのみ、「購入画面に進むボタン」が表示されること' do
       log_in(@user)
       visit item_path(@item)
       expect(page).to have_content('購入画面に進む')
+    end
+
+    it 'ログイン、ログアウトに関わらず、売却済みの商品は「購入画面に進むボタン」が表示されないこと' do
+      @order.save
+      visit item_path(@order.item)
+      expect(page).to have_no_content('購入画面に進む')
+      log_in(@user)
+      visit item_path(@order.item)
+      expect(page).to have_no_content('購入画面に進む')
     end
 
     it 'ログアウト状態のユーザーには、「編集・削除・購入画面に進むボタン」が表示されないこと' do
@@ -94,6 +128,7 @@ RSpec.describe 'Items', type: :system do
     before do
       @item.save
       @user = FactoryBot.create(:user)
+      @order = FactoryBot.build(:order)
     end
 
     it '必要な情報を適切に入力すると、商品情報（商品画像・商品名・商品の状態など）を変更できること' do
@@ -124,9 +159,16 @@ RSpec.describe 'Items', type: :system do
     end
 
     it '出品者・出品者以外にかかわらず、ログイン状態のユーザーが、URLを直接入力して売却済み商品の商品情報編集ページへ遷移しようとすると、トップページに遷移すること' do
+      @order.save
+      log_in(@order.user)
+      visit edit_item_path(@order.item)
+      expect(current_path).to eq root_path
     end
 
     it 'ログアウト状態のユーザーが、URLを直接入力して売却済み商品の商品情報編集ページへ遷移しようとすると、ログインページに遷移すること' do
+      @order.save
+      visit edit_item_path(@order.item)
+      expect(current_path).to eq new_user_session_path
     end
   end
 
@@ -142,6 +184,5 @@ RSpec.describe 'Items', type: :system do
       expect(current_path).to eq root_path
       expect(page).to have_no_content(@item.name)
     end
-
   end
 end
